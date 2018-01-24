@@ -160,6 +160,8 @@ class AreaDetectorImage(object):
             version 86についてはGADDS付属のgaddsref.pdfに詳しく説明があるが、100の場合は説明がない。
             ここでは、DIFFRAC.EVAで開いた時に表示される値から推察されるパラメーターを設定している。
             """
+            if 'UNWARPED' not in image.header['TYPE']:
+                logger.warning('This frame has NOT been UNWARPED (corrected), and may contain some error.', stack_info=True)
             self.alpha = np.deg2rad(float(image.header['ANGLES'].split()[0]))
 
             # CENTER
