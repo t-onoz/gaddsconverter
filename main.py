@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+print('application loading. please wait.')
 import traceback
 import sys
 import gzip
 from os import path
 from logging import getLogger
 import numpy as np
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from ibwwriter import IgorBinaryWave
@@ -44,6 +45,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pbSaveOriginal.clicked.connect(self.save_original)
         self.ui.pbSaveConverted.clicked.connect(self.save_converted)
         self.ui.pbSaveGrids.clicked.connect(self.save_grids)
+        self.ui.pbGridColor.clicked.connect(self.select_color)
+        self.ui.dsbGridWidth.valueChanged.connect(lambda lw: self.set_grid('linewidth', lw))
+        self.ui.cbGridStyle.currentTextChanged.connect(lambda ls: self.set_grid('linestyle', ls))
+        self.ui.cbGridStyle.setCurrentText(':')
+        self.ui.leGridColor.textChanged.connect(lambda c: self.set_grid('color', c))
         self.gfrm = AreaDetectorImage()
         self.fileLoaded.connect(lambda: self.ui.pbConvert.setEnabled(True))
         self.fileLoaded.connect(lambda: self.ui.pbSaveGrids.setEnabled(True))
@@ -140,19 +146,40 @@ See GADDS User Manual for details."""
             if not self.ui.plotOriginal.figure.axes:
                 return
             ax = self.ui.plotOriginal.figure.axes[0]
+        lw = self.ui.dsbGridWidth.value()
+        ls = self.ui.cbGridStyle.currentText()
+        color = self.ui.leGridColor.text()
         if clear_previous:
             del ax.lines[:]
         if self.ui.cbGrid2th.isChecked():
             delta_deg = self.ui.sbGrid2th.value()
             for angle_deg in np.arange(delta_deg, 180, delta_deg):
                 if self.gfrm.limits[0] <= np.deg2rad(angle_deg) <= self.gfrm.limits[1]:
-                    ax.plot(*self.gfrm.gridline(angle_deg, 'twoth'), ':', lw=1, color='#cccccc')
+                    ax.plot(*self.gfrm.gridline(angle_deg, 'twoth'), ls, lw=lw, color=color)
         if self.ui.cbGridGamma.isChecked():
             delta_deg = self.ui.sbGridGamma.value()
             for angle_deg in np.concatenate((np.arange(-90, 180, delta_deg), np.arange(-90-delta_deg, -180, -delta_deg))):
                 if self.gfrm.limits[2] <= np.deg2rad(angle_deg) <= self.gfrm.limits[3]:
-                    ax.plot(*self.gfrm.gridline(angle_deg, 'gamma'), ':', lw=1, color='#cccccc')
+                    ax.plot(*self.gfrm.gridline(angle_deg, 'gamma'), ls, lw=lw, color=color)
         self.ui.plotOriginal.canvas.draw()
+
+    def set_grid(self, key, value, *, ax=None):
+        """set grid properties."""
+        if ax is None:
+            if not self.ui.plotOriginal.figure.axes:
+                return
+            ax = self.ui.plotOriginal.figure.axes[0]
+        for line in ax.lines:
+            line.set(**{key: value})
+        if ax in self.ui.plotOriginal.figure.axes:
+            self.ui.plotOriginal.canvas.draw()
+
+    def select_color(self):
+        initial = QtGui.QColor()
+        initial.setNamedColor(self.ui.leGridColor.text())
+        color = QtWidgets.QColorDialog.getColor(initial, self)
+        if color.isValid():
+            self.ui.leGridColor.setText(color.name())
 
     def show_parameters(self):
         text = '%s = %s\n' % ('alpha', np.rad2deg(self.gfrm.alpha))
@@ -228,8 +255,10 @@ See GADDS User Manual for details."""
                 np.savetxt(fp, data, delimiter='\t')
 
 if __name__ == '__main__':
+    import matplotlib as mpl
     import argparse
     import warnings
+    mpl.rcParams['savefig.dpi'] = 300
     for name in plt.colormaps():
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")

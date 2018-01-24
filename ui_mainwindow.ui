@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>881</width>
-    <height>600</height>
+    <height>663</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QPushButton" name="pbOpen">
         <property name="text">
@@ -79,52 +79,151 @@
        </widget>
       </item>
       <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="cbGrid2th">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Show 2theta grid every:</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
+           <string>Grid properties</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="sbGrid2th">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>180</number>
-          </property>
-          <property name="value">
-           <number>5</number>
-          </property>
-         </widget>
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="sbGridGamma">
+            <property name="suffix">
+             <string> deg</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>360</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="cbGrid2th">
+            <property name="text">
+             <string>Show 2theta grid every:</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="cbGridGamma">
+            <property name="text">
+             <string>Show gamma grid every:</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="sbGrid2th">
+            <property name="suffix">
+             <string> deg</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>180</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="cbGridGamma">
-          <property name="text">
-           <string>Show gamma grid every:</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="sbGridGamma">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>360</number>
-          </property>
-          <property name="value">
-           <number>10</number>
-          </property>
-         </widget>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>style</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="cbGridStyle">
+            <item>
+             <property name="text">
+              <string>-</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>--</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>-.</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>:</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>width</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="dsbGridWidth">
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="leGridColor">
+            <property name="text">
+             <string>#aaaaaa</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pbGridColor">
+            <property name="text">
+             <string>change</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -184,6 +283,7 @@
  <tabstops>
   <tabstop>pbOpen</tabstop>
   <tabstop>pbConvert</tabstop>
+  <tabstop>pbSaveOriginal</tabstop>
   <tabstop>pbSaveConverted</tabstop>
   <tabstop>pbSaveGrids</tabstop>
   <tabstop>teParameters</tabstop>
@@ -191,6 +291,10 @@
   <tabstop>sbGrid2th</tabstop>
   <tabstop>cbGridGamma</tabstop>
   <tabstop>sbGridGamma</tabstop>
+  <tabstop>cbGridStyle</tabstop>
+  <tabstop>dsbGridWidth</tabstop>
+  <tabstop>leGridColor</tabstop>
+  <tabstop>pbGridColor</tabstop>
   <tabstop>tabPlots</tabstop>
  </tabstops>
  <resources/>
