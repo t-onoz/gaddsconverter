@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import traceback
+import sys
 import gzip
 from os import path
 from logging import getLogger
@@ -8,12 +10,25 @@ from PyQt5 import QtWidgets, QtCore
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from ibwwriter import IgorBinaryWave
-from gadds import AreaDetectorImage
+from gadds import AreaDetectorImage, BrukerImage
 from ui_mainwindow import Ui_MainWindow
 # required for pyinstaller
 import scipy
 import scipy.interpolate
 logger = getLogger(__name__)
+
+
+def excepthook(type_, value, tb):
+    if issubclass(type_, KeyboardInterrupt):
+        sys.__excepthook__(type_, value, tb)
+        return
+    logger.critical("Uncaught exception", exc_info=(type_, value, tb))
+    QtWidgets.QMessageBox.critical(
+        None,
+        'ERROR',
+        "Unhandled exception occurred. \nAsk developer for details.\n\n%s" % ''.join(traceback.format_exception(type_, value, tb))
+    )
+    # QtCore.qFatal("")
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -57,6 +72,16 @@ class MainWindow(QtWidgets.QMainWindow):
             else:
                 self.fileLoaded.emit()
                 self.setWindowTitle(f)
+        # check if UNWARPED
+        if isinstance(self.gfrm.image, BrukerImage):
+            if 'UNWARPED' not in self.gfrm.image.header.get('TYPE', ''):
+                QtWidgets.QMessageBox.warning(
+                    self,
+                    'warning: uncorrected image',
+                    """This frame file has not been UNWARPED (corrected).
+Converted frame will contain some errors.
+See GADDS User Manual for details."""
+)
 
     def plot_original(self):
         data = self.gfrm.image.data
@@ -216,6 +241,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     app = QtWidgets.QApplication([])
+    sys.excepthook = excepthook
     m = MainWindow()
     if args.batch:
         print('---------- batch mode ----------')
