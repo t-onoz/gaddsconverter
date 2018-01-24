@@ -201,3 +201,32 @@ class AreaDetectorImage(object):
         else:
             pass
         self.relim()
+
+
+if __name__ == '__main__':
+    # usage example
+    import matplotlib.colors as colors
+    import matplotlib.pyplot as plt
+    import sys
+    try:
+        f = sys.argv[1]
+    except IndexError:
+        raise ValueError('please specify filename.')
+    areaimage = AreaDetectorImage(f)
+    areaimage.convert()
+    matrix_original = areaimage.image.data
+
+    dx = areaimage.indexes[1][1] - areaimage.indexes[1][0]
+    dy = areaimage.indexes[0][1] - areaimage.indexes[0][0]
+    extent = (
+        areaimage.indexes[1][0]-dx/2, areaimage.indexes[1][-1]+dx/2,
+        areaimage.indexes[0][-1]-dy/2, areaimage.indexes[0][0]+dy/2
+    )
+    im = plt.imshow(areaimage.data_converted,
+                interpolation='nearest',
+                vmin=0, vmax=10,
+                aspect='auto',
+                origin='upper',
+                extent=extent)
+    plt.colorbar()
+    plt.show()
