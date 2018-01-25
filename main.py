@@ -229,8 +229,9 @@ See GADDS User Manual for details."""
 
     def save_grids(self, *, f=None):
         fig = plt.figure()
-        ax = fig.add_subplot(111)
         fig.set_size_inches(6, 6)
+        fig.set_tight_layout(True)
+        ax = fig.add_subplot(111)
         self.plot_gridlines(ax=ax)
         if not ax.lines:
             QtWidgets.QMessageBox.warning(self, 'error', 'no grid (twoth, gamma) is checked.')
@@ -244,7 +245,7 @@ See GADDS User Manual for details."""
             f, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'select file', '', '*.png;;*')
         if not f:
             return
-        fig.savefig(f, dpi=300, transparent=True)
+        fig.savefig(f, bbox_inches='tight', pad_inches=0, dpi=300, transparent=True)
         gridfile = path.splitext(f)[0] + '_griddata.txt'
         with open(gridfile, 'wb') as fp:
             fp.write(b'grid_x\tgrid_y\n')
