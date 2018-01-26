@@ -13,9 +13,7 @@ import matplotlib.colors as colors
 from ibwwriter import IgorBinaryWave
 from gadds import AreaDetectorImage, BrukerImage
 from ui_mainwindow import Ui_MainWindow
-# required for pyinstaller
-import scipy
-import scipy.interpolate
+
 logger = getLogger(__name__)
 
 
@@ -68,6 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def open_file(self, *, f=None):
         if f is None:
             f, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'select file', '', '*.gfrm; *.sfrm;; *')
+            f = QtCore.QDir.toNativeSeparators(f)
         if f:
             try:
                 self.gfrm = AreaDetectorImage(f)
@@ -202,6 +201,7 @@ See GADDS User Manual for details."""
     def save_converted(self, *, f=None):
         if f is None:
             f, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'select file', '', '*.ibw;; *')
+            f = QtCore.QDir.toNativeSeparators(f)
         if f:
             ibw = IgorBinaryWave(self.gfrm.data_converted, name='converted')
             x0 = self.gfrm.indexes[1][0]
@@ -217,6 +217,7 @@ See GADDS User Manual for details."""
     def save_original(self, *, f=None):
         if f is None:
             f, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'select file', '', '*.ibw;; *')
+            f = QtCore.QDir.toNativeSeparators(f)
         if f:
             if self.gfrm.scale != 1 or self.gfrm.offset != 0:
                 data = self.gfrm.image.data.astype(np.float32) * self.gfrm.scale + self.gfrm.offset
@@ -243,6 +244,7 @@ See GADDS User Manual for details."""
         ax.set_ylim(self.gfrm.image.data.shape[1], 0)
         if f is None:
             f, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'select file', '', '*.png;;*')
+            f = QtCore.QDir.toNativeSeparators(f)
         if not f:
             return
         fig.savefig(f, bbox_inches='tight', pad_inches=0, dpi=300, transparent=True)
