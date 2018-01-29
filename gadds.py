@@ -57,6 +57,10 @@ class AreaDetectorImage(object):
 
     def xy_to_angles(self, x, y):
         """convert from (x, y) coordinates to (twoth, gamma).
+        
+        Reference
+        B.B. He, Two-Dimensional X-Ray Diffraction (Wiley, 2011). 
+        2.3.4 Pixel Position in Diffraction Space -- Flat Detector
 
         :param x: x coordinate
         :param y: y coordinate
@@ -85,6 +89,11 @@ class AreaDetectorImage(object):
         """
         convert from (twoth, gamma) to (row, col).
         angles are given in rad.
+                
+        Reference
+        B.B. He, Two-Dimensional X-Ray Diffraction (Wiley, 2011). 
+        2.3.4 Pixel Position in Diffraction Space -- Flat Detector
+
         """
         alpha = self.alpha % (2 * np.pi)
         D = self.distance
