@@ -57,13 +57,14 @@ class AreaDetectorImage(object):
 
     def xy_to_angles(self, x, y):
         """convert from (x, y) coordinates to (twoth, gamma).
-        
+         (x, y) = (0, 0) corresponds to the detector center, and they should be given in cm.
+         
         Reference
         B.B. He, Two-Dimensional X-Ray Diffraction (Wiley, 2011). 
         2.3.4 Pixel Position in Diffraction Space -- Flat Detector
 
-        :param x: x coordinate
-        :param y: y coordinate
+        :param x: x coordinate in cm.
+        :param y: y coordinate in cm
         :return: (twoth, gamma) in rad.
         """
         alpha = self.alpha
