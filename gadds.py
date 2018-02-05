@@ -82,7 +82,7 @@ class AreaDetectorImage(object):
         # row ↔ y, col ↔ x
         dX, dY = self.densityXY
         cX, cY = self.centerXY
-        nY, nX = self.image.data.shape
+        nX, nY = self.image.dim1, self.image.dim2
         x, y = (col - cX)/dX, -(row-(nY-cY))/dY
         return self.xy_to_angles(x, y)
 
@@ -113,21 +113,23 @@ class AreaDetectorImage(object):
 
         # (x, y) = (0, 0) は図の左下に、(row, col) = (0, 0) は左上に対応する。
         # x と col、yとrowがそれぞれ対応する（とてもややこしい）。
-        return (self.image.data.shape[0] - y * self.densityXY[1] - self.centerXY[1],
+        return (self.image.dim2 - y * self.densityXY[1] - self.centerXY[1],
                 x * self.densityXY[0] + self.centerXY[0])
 
     def relim(self):
-        if self.image.data is None:
-            return
-        rr, cc = np.indices(self.image.data.shape)
+        rr, cc = np.indices((self.image.dim2, self.image.dim1))
         twoth, gamma = self.rowcol_to_angles(rr, cc)
-        self.limits = (np.min(twoth), np.max(twoth), np.min(gamma), np.max(gamma))
+        if twoth.size > 0 and gamma.size > 0:
+            self.limits = (np.min(twoth), np.max(twoth), np.min(gamma), np.max(gamma))
+        return self.limits
 
     def convert(self, n_twoth=None, n_gamma=None):
+        if self.image.data is None:
+            raise ValueError('Cannot convert because image has not been loaded.')
         if n_twoth is None:
-            n_twoth = self.image.data.shape[1]
+            n_twoth = self.image.dim1
         if n_gamma is None:
-            n_gamma = self.image.data.shape[0]
+            n_gamma = self.image.dim2
 
         # determine range of twoth and gamma
         self.relim()
@@ -143,7 +145,7 @@ class AreaDetectorImage(object):
 
         # perform interpolation
         f = RegularGridInterpolator(
-            (np.arange(self.image.data.shape[0]), np.arange(self.image.data.shape[1])),
+            (np.arange(self.image.dim2), np.arange(self.image.dim1)),
             self.image.data,
             method='nearest',
             bounds_error=False,
