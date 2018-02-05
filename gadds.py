@@ -101,7 +101,7 @@ class AreaDetectorImage(object):
             if np.isclose(twoth, np.pi/2, atol=1e-6, rtol=0):
                 twoth += 1e-6
         else:
-            twoth = np.array(twoth)
+            twoth = np.array(twoth, dtype=float)
             twoth[np.isclose(twoth, np.pi/2, atol=1e-6, rtol=0)] += 1e-6
 
         alpha = self.alpha % (2 * np.pi)
