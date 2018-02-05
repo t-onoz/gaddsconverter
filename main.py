@@ -60,6 +60,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fileLoaded.connect(self.show_parameters)
         self.convertFinished.connect(lambda: self.ui.pbSaveConverted.setEnabled(True))
         self.convertFinished.connect(self.plot_converted)
+        self.convertFinished.connect(lambda: self.ui.tabPlots.setCurrentWidget(self.ui.plotConverted))
         self.ui.cbGrid2th.stateChanged.connect(self.plot_gridlines)
         self.ui.sbGrid2th.valueChanged.connect(self.plot_gridlines)
         self.ui.cbGridGamma.stateChanged.connect(self.plot_gridlines)
@@ -151,7 +152,6 @@ See GADDS User Manual for details."""
         plt.colorbar(mappable=im, ax=ax)
         ax.grid(True, color='#aaaaaa', ls=':', lw=0.5)
         self.ui.plotConverted.canvas.draw()
-        self.ui.tabPlots.setCurrentWidget(self.ui.plotConverted)
 
     def plot_gridlines(self, *, ax=None, clear_previous=True):
         if ax is None:
