@@ -14,8 +14,64 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="tabPlots">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="PlotWidget" name="plotOriginal">
+       <property name="minimumSize">
+        <size>
+         <width>256</width>
+         <height>256</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Original</string>
+       </attribute>
+      </widget>
+      <widget class="PlotWidget" name="plotConverted">
+       <property name="minimumSize">
+        <size>
+         <width>256</width>
+         <height>256</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Converted</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cbLogNorm">
+        <property name="text">
+         <string>Log Normalize</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0" rowspan="2">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QPushButton" name="pbOpen">
@@ -228,35 +284,6 @@
        </layout>
       </item>
      </layout>
-    </item>
-    <item>
-     <widget class="QTabWidget" name="tabPlots">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="PlotWidget" name="plotOriginal">
-       <property name="minimumSize">
-        <size>
-         <width>256</width>
-         <height>256</height>
-        </size>
-       </property>
-       <attribute name="title">
-        <string>Original</string>
-       </attribute>
-      </widget>
-      <widget class="PlotWidget" name="plotConverted">
-       <property name="minimumSize">
-        <size>
-         <width>256</width>
-         <height>256</height>
-        </size>
-       </property>
-       <attribute name="title">
-        <string>Converted</string>
-       </attribute>
-      </widget>
-     </widget>
     </item>
    </layout>
   </widget>

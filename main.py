@@ -48,6 +48,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.cbGridStyle.currentTextChanged.connect(lambda ls: self.set_grid('linestyle', ls))
         self.ui.cbGridStyle.setCurrentText(':')
         self.ui.leGridColor.textChanged.connect(lambda c: self.set_grid('color', c))
+        self.ui.cbLogNorm.stateChanged[int].connect(self.plot_original)
+        self.ui.cbLogNorm.stateChanged[int].connect(self.plot_converted)
         self.gfrm = AreaDetectorImage()
         self.fileLoaded.connect(lambda: self.ui.pbConvert.setEnabled(True))
         self.fileLoaded.connect(lambda: self.ui.pbSaveGrids.setEnabled(True))
@@ -88,9 +90,13 @@ Converted frame will contain some errors.
 See GADDS User Manual for details."""
 )
 
-    def plot_original(self):
+    def plot_original(self, log_norm=True):
+        if log_norm:
+            Norm, vmin, vmax = colors.LogNorm, 0.1, None
+        else:
+            Norm, vmin, vmax = colors.Normalize, 0, 15
         data = self.gfrm.image.data
-        if data is None:
+        if data is None or data.size == 0:
             return
         if self.gfrm.scale != 1 or self.gfrm.offset != 0:
             data = data.astype(np.float32) * self.gfrm.scale + self.gfrm.offset
@@ -100,7 +106,7 @@ See GADDS User Manual for details."""
         self.ui.plotOriginal.figure.set_tight_layout(True)
         ax = self.ui.plotOriginal.figure.add_subplot(111)
         ax.set_title('image')
-        im = ax.imshow(data, cmap='afmhot', norm=colors.LogNorm(vmin=0.1), aspect=1)
+        im = ax.imshow(data, cmap='afmhot', norm=Norm(vmin=vmin, vmax=vmax), aspect=1)
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
         ax.set_xticks([])
@@ -110,14 +116,21 @@ See GADDS User Manual for details."""
         self.plot_gridlines()
         self.ui.plotOriginal.canvas.draw()
 
-    def plot_converted(self):
+    def plot_converted(self, log_norm=True):
+        if log_norm:
+            Norm, vmin, vmax = colors.LogNorm, 0.1, None
+        else:
+            Norm, vmin, vmax = colors.Normalize, 0, 15
+        data = self.gfrm.data_converted
+        if data is None or data.size == 0:
+            return
         self.ui.plotConverted.figure.clf()
         self.ui.plotConverted.figure.set_tight_layout(True)
         ax = self.ui.plotConverted.figure.add_subplot(111)
         ax.set_title('converted image')
-        im = ax.imshow(self.gfrm.data_converted,
+        im = ax.imshow(data,
                        interpolation='nearest',
-                       norm=colors.LogNorm(vmin=0.1),
+                       norm=Norm(vmin=vmin, vmax=vmax),
                        aspect='auto',
                        origin='upper',
                        cmap='jet')
