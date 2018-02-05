@@ -163,12 +163,15 @@ class AreaDetectorImage(object):
         if axis == 'twoth':
             if not self.limits[0] <= angle <= self.limits[1]:
                 return [], []
-            return self.angles_to_rowcol(angle, np.arange(self.limits[2], self.limits[3], delta))[::-1]
+            rows, cols = self.angles_to_rowcol(angle, np.arange(self.limits[2], self.limits[3], delta))
         elif axis == 'gamma':
             if not self.limits[2] <= angle <= self.limits[3]:
                 return [], []
-            return self.angles_to_rowcol(np.arange(self.limits[0], self.limits[1], delta), angle)[::-1]
-        raise ValueError('unknown axis: %s' % axis)
+            rows, cols = self.angles_to_rowcol(np.arange(self.limits[0], self.limits[1], delta), angle)
+        else:
+            raise ValueError('unknown axis: %s' % axis)
+        idx = (0 <= rows) & (rows < self.image.dim2) & (0 <= cols) & (cols < self.image.dim1)
+        return cols[idx], rows[idx]
 
     def load_headers(self):
         """image fileのヘッダーから必要なパラメーターを読み込む"""
