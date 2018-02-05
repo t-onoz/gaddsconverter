@@ -97,8 +97,9 @@ class AreaDetectorImage(object):
 
         """
         # 2θ=90°でのtan(2θ)の発散対策
-        if np.isscalar(twoth) and np.isclose(twoth, np.pi/2, atol=1e-6, rtol=0):
-            twoth += 1e-6
+        if np.isscalar(twoth):
+            if np.isclose(twoth, np.pi/2, atol=1e-6, rtol=0):
+                twoth += 1e-6
         else:
             twoth = np.array(twoth)
             twoth[np.isclose(twoth, np.pi/2, atol=1e-6, rtol=0)] += 1e-6
