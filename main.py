@@ -10,7 +10,7 @@ import numpy as np
 from PyQt5 import QtWidgets, QtCore, QtGui
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
-from ibwwriter import IgorBinaryWave
+from igorwriter import IgorWave5 as IgorBinaryWave
 from gadds import AreaDetectorImage, BrukerImage
 from ui_mainwindow import Ui_MainWindow
 
@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def open_file(self, *, f=None):
         if f is None:
-            f, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'select file', '', '*.gfrm; *.sfrm;; *')
+            f, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'select file', '', "Image files (*.gfrm *.sfrm);; All files (*)")
             f = QtCore.QDir.toNativeSeparators(f)
         if f:
             try:
